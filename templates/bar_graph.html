@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Line Graph</title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+	<canvas id="myChart"></canvas>
+	<button onclick="toggleChart()">Toggle Chart Type</button>
+	<script>
+		var ctx = document.getElementById('myChart').getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: [],
+				datasets: [{
+					label: 'My Data',
+					data: [],
+					fill: false,
+					borderColor: 'rgb(75, 192, 192)',
+					lineTension: 0.1
+				}]
+			},
+			options: {
+				scales: {
+					xAxes: [{
+						type: 'time',
+						distribution: 'linear',
+						time: {
+							displayFormats: {
+								second: 'h:mm:ss a'
+							}
+						}
+					}]
+				}
+			}
+		});
+
+		function generateData() {
+			var now = Date.now();
+			var newData = Math.floor(Math.random() * 100);
+			
+			// remove data older than 30 seconds
+			var timeLimit = now - 30000;
+			var labels = myChart.data.labels;
+			var data = myChart.data.datasets[0].data;
+			while (labels.length > 0 && labels[0] < timeLimit) {
+				labels.shift();
+				data.shift();
+			}
+			
+			// add new data
+			labels.push(now);
+			data.push(newData);
+			myChart.update();
+		}
+
+		setInterval(generateData, 1000);
+		
+		function toggleChart() {
+			if (myChart.config.type == 'line') {
+				myChart.config.type = 'bar';
+			} else {
+				myChart.config.type = 'line';
+			}
+			myChart.update();
+		}
+	</script>
+</body>
+</html>

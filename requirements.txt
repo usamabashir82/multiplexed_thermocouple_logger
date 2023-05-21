@@ -1,0 +1,9 @@
+pyserial>=3.5
+hid==1.0.4
+micropython-cpython-ustruct==0.0
+micropython-cpython-micropython==0.1.1
+micropython-cpython-utime==0.4
+adafruit-circuitpython-max31855==3.2.18
+flask
+rethinkdb
+hidapi
