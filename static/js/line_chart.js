@@ -188,27 +188,38 @@ window.onload = function() {
   
     // Function to display the images
     function displayImages() {
-      var image = new Image();
-      image.onload = function() {
-        loadingContainer.innerHTML = "";
-        loadingContainer.appendChild(image);
-  
-        setTimeout(function() {
-          // Display the next image after the specified duration
-          currentImageIndex++;
-          if (currentImageIndex < imageUrls.length) {
-            displayImages();
-          } else {
-            // After displaying all images, hide the loading container and show the content container
-            loadingContainer.style.display = "none";
-            contentContainer.style.display = "block";
-          }
-        }, imageDuration);
-      };
-      image.src = imageUrls[currentImageIndex];
+        var image = new Image();
+        image.onload = function() {
+          // Scale down the image by applying a static scale factor
+          var scaleFactor = 0.95;
+          var scaledWidth = image.width * scaleFactor;
+          var scaledHeight = image.height * scaleFactor;
+    
+          image.style.width = scaledWidth + "px";
+          image.style.height = scaledHeight + "px";
+          image.style.position = "absolute";
+          image.style.left = "50%";
+          image.style.top = "50%";
+          image.style.transform = "translate(-50%, -50%)";
+    
+          loadingContainer.innerHTML = "";
+          loadingContainer.appendChild(image);
+    
+          setTimeout(function() {
+            // Display the next image after the specified duration
+            currentImageIndex++;
+            if (currentImageIndex < imageUrls.length) {
+              displayImages();
+            } else {
+              // After displaying all images, hide the loading container and show the content container
+              loadingContainer.style.display = "none";
+              contentContainer.style.display = "block";
+            }
+          }, imageDuration);
+        };
+        image.src = imageUrls[currentImageIndex];
+      }
+    
+      // Start displaying the images
+      displayImages();
     }
-  
-    // Start displaying the images
-    displayImages();
-  }
-  
