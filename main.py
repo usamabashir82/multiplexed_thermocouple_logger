@@ -49,6 +49,14 @@ def send_line_chart_js():
 def send_button_css():
 	return send_from_directory('static/css', 'button.css')
 
+@app.route('/splash1.png')
+def send_splash1():
+	return send_from_directory('static/png', 'splash1.png')
+
+@app.route('/splash2.png')
+def send_splash2():
+	return send_from_directory('static/png', 'splash2.png')
+
 def get_data_line():
 	out_data_dict = {
 		'labels': [],

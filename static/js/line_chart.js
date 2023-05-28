@@ -166,7 +166,49 @@ $("#button2").click(function() {
     console.log("Button 2 clicked!");
 });
 
-// $("#button3").click(function() {
-//     // Add your code to call Python backend here for button 3
-//     console.log("Button 3 clicked!");
-// });
+window.onload = function() {
+    // Show the loading container
+    var loadingContainer = document.getElementById("loading-container");
+    loadingContainer.style.display = "block";
+  
+    // Hide the content container
+    var contentContainer = document.getElementById("content-container");
+    contentContainer.style.display = "none";
+  
+    // Set the duration for each image (in milliseconds)
+    var imageDuration = 3000; // 3 seconds
+  
+    // Array of image URLs
+    var imageUrls = [
+      "splash1.png",
+      "splash2.png"
+    ];
+  
+    var currentImageIndex = 0;
+  
+    // Function to display the images
+    function displayImages() {
+      var image = new Image();
+      image.onload = function() {
+        loadingContainer.innerHTML = "";
+        loadingContainer.appendChild(image);
+  
+        setTimeout(function() {
+          // Display the next image after the specified duration
+          currentImageIndex++;
+          if (currentImageIndex < imageUrls.length) {
+            displayImages();
+          } else {
+            // After displaying all images, hide the loading container and show the content container
+            loadingContainer.style.display = "none";
+            contentContainer.style.display = "block";
+          }
+        }, imageDuration);
+      };
+      image.src = imageUrls[currentImageIndex];
+    }
+  
+    // Start displaying the images
+    displayImages();
+  }
+  
