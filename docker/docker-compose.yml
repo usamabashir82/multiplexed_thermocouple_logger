@@ -1,0 +1,32 @@
+version: '3'
+services:
+  thermlog:
+    image: thermlog_globaltech
+    container_name: thermlog_container
+    devices:
+      - /dev/picocafe:/dev/picocafe
+    privileged: true
+    volumes:
+      - /dev:/dev
+    ports:
+      - 5000:5000
+    networks:
+      - my_network
+    restart: always
+    depends_on:
+      - rethinkdb
+
+  rethinkdb:
+    image: rethinkdb
+    container_name: rethinkdb
+    restart: always
+    ports:
+      - 9000:8080
+      - 28015:28015
+      - 29015:29015
+    networks:
+      - my_network
+
+networks:
+  my_network:
+
