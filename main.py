@@ -86,8 +86,9 @@ def get_data_line():
 
 def get_data_bar():
 	with RethinkDBConnection(RETHINK_CONFIGS) as conn:
-		return conn.get_latest_data()
-
+		data = conn.get_latest_data()
+		data["ts"] = time.strftime('%H:%M:%S', time.localtime(data['ts']))
+		return data
 def data_gather_loop():
 	#implement funcitonality for getting data from sensors
 	

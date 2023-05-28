@@ -44,7 +44,7 @@ class Thermocouple_IF:
                 print(read_line)
                 values = read_line.split(',')  # Split the line into individual values
                 for value in values:
-                    serial_data.append(float(value))  # Convert each value to float and append to the list
+                    serial_data.append(int(float(value)))  # Convert each value to float and append to the list
             
                 return serial_data
             return None
