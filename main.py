@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, send_from_directory
 import random
 import time
-# from thermocouple_if import MAX31855K
+from thermocouple_if import Thermocouple_IF
 from rethink_db import RethinkDBConnection
 from threading import Thread
 
@@ -62,7 +62,7 @@ def get_data_line():
 		'data7': [],
 	}
 	with RethinkDBConnection(RETHINK_CONFIGS) as conn:
-		data = conn.get_data_last_ts(30)
+		data = conn.get_data_last_ts(300)
 		sorted_data = sorted(data, key=lambda k: k['ts'], reverse=False)
 		for items in sorted_data:
 			out_data_dict['labels'].append(time.strftime('%H:%M:%S', time.localtime(items['ts'])))
@@ -85,19 +85,29 @@ def data_gather_loop():
 	
 
 	#dummy data loop
+
+	sensor = Thermocouple_IF("/dev/picocafe", 9600)
+	sensor.start_monitoring()
+	sensor.open()
+	with RethinkDBConnection(RETHINK_CONFIGS) as conn:
+		conn.create_table_if_not_exists("data")
 	while True:
-		data = {
-			'th1': random.randint(1, 100),
-			'th2': random.randint(1, 100),
-			'th3': random.randint(1, 100),
-			'th4': random.randint(1, 100),
-			'th5': random.randint(1, 100),
-			'th6': random.randint(1, 100),
-			'th7': random.randint(1, 100),
-			'th8': random.randint(1, 100)
-		}
-		with RethinkDBConnection(RETHINK_CONFIGS) as conn:
-			conn.insert_data(data)
+		tempC = sensor.read_data()
+		if type(tempC) == list:
+			data = {
+				'th1': tempC[7],
+				'th2': tempC[8],
+				'th3': tempC[9],
+				'th8': tempC[10],
+				'th4': tempC[11],
+				'th5': tempC[12],
+				'th6': tempC[13],
+				'th7': tempC[14]
+			}
+			
+			print(f"Temperature Data: {data}")
+			with RethinkDBConnection(RETHINK_CONFIGS) as conn:
+				conn.insert_data(data)
 		time.sleep(1)
 if __name__ == '__main__':
 	print("Starting Application")

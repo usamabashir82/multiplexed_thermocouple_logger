@@ -33,4 +33,13 @@ class RethinkDBConnection:
         return self.query('data',r.row['ts']>timestamp)
     def get_data_last_n(self, n):
         return r.table('data').order_by(r.desc('ts')).limit(n).run(self.conn)
+    
+    def create_table_if_not_exists(self, table_name):
+        # Check if the table exists
+        if table_name not in r.table_list().run(self.conn):
+            # Create the table
+            r.table_create(table_name).run(self.conn)
+            print(f"Table '{table_name}' created.")
+        else:
+            print(f"Table '{table_name}' already exists.")
 
